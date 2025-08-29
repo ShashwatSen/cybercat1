@@ -8,8 +8,8 @@ const HowItWorksSection = () => {
       icon: Upload,
       title: "Upload Scan Results",
       description: "Simply upload your vulnerability scan results from popular tools like Nessus, OpenVAS, or custom scripts. CyberCat supports multiple formats and automatically parses the data.",
-      color: "text-neon-cyan",
-      bgGradient: "from-neon-cyan/20 to-transparent"
+      color: "text-neon-red",
+      bgGradient: "from-neon-red/20 to-transparent"
     },
     {
       step: 2,
@@ -24,8 +24,8 @@ const HowItWorksSection = () => {
       icon: FileCheck,
       title: "Review & Report",
       description: "Review AI-generated reports, add your expert insights, and export professional documentation. Each report includes verification steps, impact analysis, and remediation guidance.",
-      color: "text-neon-green",
-      bgGradient: "from-neon-green/20 to-transparent"
+      color: "text-neon-blue",
+      bgGradient: "from-neon-blue/20 to-transparent"
     }
   ];
 
@@ -50,7 +50,7 @@ const HowItWorksSection = () => {
             <div key={step.step} className="flex flex-col lg:flex-row items-center mb-16 last:mb-0">
               {/* Step Card */}
               <div className={`flex-1 ${index % 2 === 0 ? 'lg:pr-12' : 'lg:pl-12 lg:order-2'}`}>
-                <Card className={`bg-gradient-to-br ${step.bgGradient} cyber-border hover:glow-cyan transition-all duration-500 group`}>
+                <Card className={`bg-gradient-to-br ${step.bgGradient} cyber-border hover:animate-glow-cycle transition-all duration-500 group`}>
                   <CardHeader className="text-center lg:text-left">
                     <div className="flex items-center justify-center lg:justify-start space-x-4 mb-4">
                       <div className={`w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center ${step.color} font-bold text-xl`}>
@@ -71,7 +71,7 @@ const HowItWorksSection = () => {
               {/* Arrow (hidden on mobile, last step) */}
               {index < steps.length - 1 && (
                 <div className={`hidden lg:flex items-center justify-center ${index % 2 === 0 ? 'order-2' : 'order-1'} mx-8`}>
-                  <div className="w-16 h-16 rounded-full bg-gradient-primary flex items-center justify-center animate-glow-pulse">
+                  <div className={`w-16 h-16 rounded-full bg-gradient-animated flex items-center justify-center animate-glow-cycle`}>
                     <ArrowRight className={`w-8 h-8 text-cyber-dark ${index % 2 !== 0 ? 'rotate-180' : ''}`} />
                   </div>
                 </div>

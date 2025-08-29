@@ -8,52 +8,53 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* CyberCat Cyberpunk Theme - Dark Mode Primary */
-    --background: 240 10% 3.9%;
-    --foreground: 180 100% 90%;
+    /* CyberCat Red-Purple-Blue Theme - Dark Mode */
+    --background: 240 15% 4%;
+    --foreground: 300 80% 90%;
 
-    --card: 240 10% 6%;
-    --card-foreground: 180 100% 90%;
+    --card: 240 20% 8%;
+    --card-foreground: 300 80% 90%;
 
-    --popover: 240 10% 6%;
-    --popover-foreground: 180 100% 90%;
+    --popover: 240 20% 8%;
+    --popover-foreground: 300 80% 90%;
 
-    --primary: 180 100% 50%;
-    --primary-foreground: 240 10% 3.9%;
+    --primary: 320 100% 60%;
+    --primary-foreground: 240 15% 4%;
 
-    --secondary: 280 100% 70%;
-    --secondary-foreground: 240 10% 3.9%;
+    --secondary: 280 100% 65%;
+    --secondary-foreground: 240 15% 4%;
 
-    --muted: 240 5% 15%;
-    --muted-foreground: 180 50% 60%;
+    --muted: 250 15% 12%;
+    --muted-foreground: 280 40% 65%;
 
-    --accent: 120 100% 50%;
-    --accent-foreground: 240 10% 3.9%;
+    --accent: 240 100% 70%;
+    --accent-foreground: 240 15% 4%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 240 20% 20%;
-    --input: 240 20% 15%;
-    --ring: 180 100% 50%;
+    --border: 260 30% 18%;
+    --input: 260 25% 12%;
+    --ring: 320 100% 60%;
 
-    /* CyberCat Custom Colors */
-    --neon-cyan: 180 100% 50%;
-    --neon-purple: 280 100% 70%;
-    --neon-green: 120 100% 50%;
-    --cyber-dark: 240 10% 3.9%;
-    --cyber-darker: 240 15% 2%;
-    --cyber-gray: 240 5% 15%;
+    /* CyberCat Red-Purple-Blue Colors */
+    --neon-red: 350 100% 65%;
+    --neon-purple: 280 100% 65%;
+    --neon-blue: 240 100% 70%;
+    --cyber-dark: 240 15% 4%;
+    --cyber-darker: 240 20% 2%;
+    --cyber-gray: 250 15% 12%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-purple)));
-    --gradient-accent: linear-gradient(90deg, hsl(var(--neon-green)), hsl(var(--neon-cyan)));
+    /* Animated Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--neon-red)), hsl(var(--neon-purple)), hsl(var(--neon-blue)));
+    --gradient-accent: linear-gradient(90deg, hsl(var(--neon-purple)), hsl(var(--neon-blue)));
     --gradient-dark: linear-gradient(180deg, hsl(var(--cyber-darker)), hsl(var(--cyber-dark)));
+    --gradient-animated: linear-gradient(-45deg, hsl(var(--neon-red)), hsl(var(--neon-purple)), hsl(var(--neon-blue)), hsl(var(--neon-red)));
 
-    /* Glows and Shadows */
-    --glow-cyan: 0 0 20px hsl(var(--neon-cyan) / 0.5);
-    --glow-purple: 0 0 20px hsl(var(--neon-purple) / 0.5);
-    --glow-green: 0 0 20px hsl(var(--neon-green) / 0.5);
+    /* Animated Glows and Shadows */
+    --glow-red: 0 0 30px hsl(var(--neon-red) / 0.6);
+    --glow-purple: 0 0 30px hsl(var(--neon-purple) / 0.6);
+    --glow-blue: 0 0 30px hsl(var(--neon-blue) / 0.6);
 
     --radius: 0.75rem;
 
@@ -124,20 +125,20 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
-  .glow-cyan {
-    box-shadow: var(--glow-cyan);
+  .glow-red {
+    box-shadow: var(--glow-red);
   }
   
   .glow-purple {
     box-shadow: var(--glow-purple);
   }
   
-  .glow-green {
-    box-shadow: var(--glow-green);
+  .glow-blue {
+    box-shadow: var(--glow-blue);
   }
   
   .text-glow {
-    text-shadow: 0 0 10px currentColor;
+    text-shadow: 0 0 15px currentColor;
   }
   
   .bg-gradient-primary {
@@ -150,6 +151,24 @@ All colors MUST be HSL.
   
   .bg-gradient-dark {
     background: var(--gradient-dark);
+  }
+  
+  .bg-gradient-animated {
+    background: var(--gradient-animated);
+    background-size: 400% 400%;
+    animation: gradient-shift 4s ease infinite;
+  }
+  
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
   
   .cyber-border {
@@ -172,5 +191,21 @@ All colors MUST be HSL.
   
   .cyber-border:hover::before {
     opacity: 1;
+  }
+  
+  .animate-glow-cycle {
+    animation: glow-cycle 3s ease-in-out infinite;
+  }
+  
+  @keyframes glow-cycle {
+    0%, 100% {
+      box-shadow: var(--glow-red);
+    }
+    33% {
+      box-shadow: var(--glow-purple);
+    }
+    66% {
+      box-shadow: var(--glow-blue);
+    }
   }
 }

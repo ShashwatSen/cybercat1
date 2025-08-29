@@ -62,10 +62,10 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// CyberCat custom colors
-				'neon-cyan': 'hsl(var(--neon-cyan))',
+				// CyberCat Red-Purple-Blue colors
+				'neon-red': 'hsl(var(--neon-red))',
 				'neon-purple': 'hsl(var(--neon-purple))',
-				'neon-green': 'hsl(var(--neon-green))',
+				'neon-blue': 'hsl(var(--neon-blue))',
 				'cyber-dark': 'hsl(var(--cyber-dark))',
 				'cyber-darker': 'hsl(var(--cyber-darker))',
 				'cyber-gray': 'hsl(var(--cyber-gray))'

@@ -13,9 +13,9 @@ const HeroSection = () => {
             <img 
               src={cybercatLogo} 
               alt="CyberCat" 
-              className="w-16 h-16 animate-float glow-cyan"
+              className="w-16 h-16 animate-float animate-glow-cycle"
             />
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-animated bg-clip-text text-transparent">
               CyberCat
             </h1>
           </div>
@@ -32,7 +32,7 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" className="bg-gradient-primary text-cyber-dark font-semibold glow-cyan">
+            <Button size="lg" className="bg-gradient-animated text-cyber-dark font-semibold animate-glow-cycle">
               Start Free Trial
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
@@ -43,7 +43,7 @@ const HeroSection = () => {
 
           {/* Feature Cards */}
           <div className="grid md:grid-cols-3 gap-6 mt-16">
-            <Card className="p-6 bg-card/50 cyber-border hover:glow-cyan transition-all duration-300">
+            <Card className="p-6 bg-card/50 cyber-border hover:glow-red transition-all duration-300">
               <Shield className="w-8 h-8 text-primary mb-4 mx-auto" />
               <h3 className="text-lg font-semibold mb-2">Ethical Security</h3>
               <p className="text-muted-foreground text-sm">
@@ -59,7 +59,7 @@ const HeroSection = () => {
               </p>
             </Card>
             
-            <Card className="p-6 bg-card/50 cyber-border hover:glow-green transition-all duration-300">
+            <Card className="p-6 bg-card/50 cyber-border hover:glow-blue transition-all duration-300">
               <Target className="w-8 h-8 text-accent mb-4 mx-auto" />
               <h3 className="text-lg font-semibold mb-2">Expert Guidance</h3>
               <p className="text-muted-foreground text-sm">
