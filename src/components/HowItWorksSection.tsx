@@ -30,24 +30,23 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-20 bg-gradient-dark">
+    <section id="how-it-works" className="py-12 bg-gradient-dark">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-slide-up">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-slide-up">
             <span className="animate-text-shimmer text-glow">
               How It Works
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            CyberCat streamlines your security research workflow in three simple steps. 
-            From raw scan data to professional reports in minutes, not hours.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            From raw scan data to professional reports in three simple steps.
           </p>
         </div>
 
         {/* Steps */}
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           {steps.map((step, index) => (
-            <div key={step.step} className="flex flex-col lg:flex-row items-center mb-16 last:mb-0">
+            <div key={step.step} className="flex flex-col lg:flex-row items-center mb-12 last:mb-0">
               {/* Step Card */}
               <div className={`flex-1 ${index % 2 === 0 ? 'lg:pr-12' : 'lg:pl-12 lg:order-2'}`}>
                 <Card className={`bg-gradient-to-br ${step.bgGradient} cyber-border hover:animate-glow-cycle transition-all duration-500 group`}>
@@ -90,21 +89,18 @@ const HowItWorksSection = () => {
         </div>
 
         {/* Process Benefits */}
-        <div className="mt-20 grid md:grid-cols-3 gap-8">
+        <div className="mt-12 grid md:grid-cols-3 gap-6">
           <div className="text-center">
-            <div className="text-4xl font-bold text-primary mb-2">90%</div>
-            <div className="text-muted-foreground">Time Saved</div>
-            <div className="text-sm text-muted-foreground mt-2">Compared to manual triage</div>
+            <div className="text-3xl font-bold text-primary mb-2">90%</div>
+            <div className="text-muted-foreground text-sm">Time Saved</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-secondary mb-2">95%</div>
-            <div className="text-muted-foreground">False Positive Reduction</div>
-            <div className="text-sm text-muted-foreground mt-2">AI-powered filtering</div>
+            <div className="text-3xl font-bold text-secondary mb-2">95%</div>
+            <div className="text-muted-foreground text-sm">False Positive Reduction</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-accent mb-2">100%</div>
-            <div className="text-muted-foreground">Ethical Standards</div>
-            <div className="text-sm text-muted-foreground mt-2">Responsible disclosure focused</div>
+            <div className="text-3xl font-bold text-accent mb-2">100%</div>
+            <div className="text-muted-foreground text-sm">Ethical Standards</div>
           </div>
         </div>
       </div>

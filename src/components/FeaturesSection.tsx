@@ -48,32 +48,31 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section id="features" className="py-20 bg-background">
+    <section id="features" className="py-12 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-slide-up">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-slide-up">
             <span className="animate-text-shimmer animate-glow-pulse">
               Powerful Features
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            CyberCat combines cutting-edge AI with security expertise to streamline 
-            your vulnerability research workflow while maintaining the highest ethical standards.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            AI-powered security research tools maintaining the highest ethical standards.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <Card 
               key={index} 
               className={`bg-card/50 cyber-border transition-all duration-300 ${feature.glowClass} group`}
             >
-              <CardHeader className="text-center">
-                <feature.icon className={`w-12 h-12 ${feature.color} mx-auto mb-4 group-hover:animate-glow-pulse`} />
-                <CardTitle className="text-xl mb-3">{feature.title}</CardTitle>
+              <CardHeader className="text-center pb-3">
+                <feature.icon className={`w-8 h-8 ${feature.color} mx-auto mb-3 group-hover:animate-glow-pulse`} />
+                <CardTitle className="text-lg mb-2">{feature.title}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground leading-relaxed">
+              <CardContent className="pt-0">
+                <p className="text-muted-foreground text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </CardContent>
@@ -82,47 +81,47 @@ const FeaturesSection = () => {
         </div>
 
         {/* Additional Feature Highlights */}
-        <div className="mt-16 grid md:grid-cols-2 gap-8">
-          <div className="bg-gradient-dark p-8 rounded-lg cyber-border">
-            <h3 className="text-2xl font-bold text-primary mb-4">Enterprise Ready</h3>
-            <ul className="space-y-3 text-muted-foreground">
-              <li className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-neon-green" />
-                <span>SOC 2 Type II compliant infrastructure</span>
+        <div className="mt-12 grid md:grid-cols-2 gap-6">
+          <div className="bg-gradient-dark p-6 rounded-lg cyber-border">
+            <h3 className="text-xl font-bold text-primary mb-3">Enterprise Ready</h3>
+            <ul className="space-y-2 text-muted-foreground text-sm">
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-neon-green" />
+                <span>SOC 2 Type II compliant</span>
               </li>
-              <li className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-neon-green" />
-                <span>End-to-end encryption for all data</span>
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-neon-green" />
+                <span>End-to-end encryption</span>
               </li>
-              <li className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-neon-green" />
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-neon-green" />
                 <span>Role-based access controls</span>
               </li>
-              <li className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-neon-green" />
-                <span>Audit logging and compliance reporting</span>
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-neon-green" />
+                <span>Audit logging</span>
               </li>
             </ul>
           </div>
 
-          <div className="bg-gradient-dark p-8 rounded-lg cyber-border">
-            <h3 className="text-2xl font-bold text-secondary mb-4">Research Focused</h3>
-            <ul className="space-y-3 text-muted-foreground">
-              <li className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-neon-purple" />
+          <div className="bg-gradient-dark p-6 rounded-lg cyber-border">
+            <h3 className="text-xl font-bold text-secondary mb-3">Research Focused</h3>
+            <ul className="space-y-2 text-muted-foreground text-sm">
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-neon-purple" />
                 <span>CVE database integration</span>
               </li>
-              <li className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-neon-purple" />
-                <span>MITRE ATT&CK framework mapping</span>
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-neon-purple" />
+                <span>MITRE ATT&CK mapping</span>
               </li>
-              <li className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-neon-purple" />
-                <span>Custom vulnerability templates</span>
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-neon-purple" />
+                <span>Custom templates</span>
               </li>
-              <li className="flex items-center space-x-3">
-                <CheckCircle className="w-5 h-5 text-neon-purple" />
-                <span>Integration with popular security tools</span>
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4 text-neon-purple" />
+                <span>Security tool integration</span>
               </li>
             </ul>
           </div>
