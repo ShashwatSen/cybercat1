@@ -158,9 +158,82 @@ How can I assist you with your security research today?`;
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
+      {/* Animated Background Effects */}
+      <div className="matrix-bg">
+        <div className="terminal-grid"></div>
+        <div className="code-rain">
+          {/* Animated code lines */}
+          {Array.from({ length: 15 }).map((_, i) => (
+            <div
+              key={i}
+              className="code-line"
+              style={{
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 10}s`,
+                animationDuration: `${15 + Math.random() * 10}s`,
+              }}
+            >
+              {[
+                'const vulnerabilities = await scanResults.filter(v => v.severity === "critical");',
+                'if (payload.includes("script")) { sanitizeInput(payload); }',
+                'SELECT * FROM users WHERE id = ? AND password = ?',
+                'function validateAuth(token) { return jwt.verify(token, secret); }',
+                'import { SQLInjection, XSS, CSRF } from "./vulnerabilities";',
+                'const exploit = { type: "RCE", payload: base64.decode(input) };',
+                'ssh root@target.com -p 22 -i private_key',
+                'nmap -sS -O target.com',
+                'curl -X POST -H "Content-Type: application/json" -d payload',
+                'grep -r "password" /var/log/',
+                'nc -lvp 4444',
+                'python3 exploit.py --target 192.168.1.1',
+                'cat /etc/passwd | grep root',
+                'chmod +x exploit.sh && ./exploit.sh',
+                'find / -name "*.conf" -exec grep -l "password" {} \\;'
+              ][Math.floor(Math.random() * 15)]}
+            </div>
+          ))}
+        </div>
+        
+        {/* Floating code snippets */}
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div
+            key={`float-${i}`}
+            className="floating-code"
+            style={{
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 20}s`,
+              animationDuration: `${20 + Math.random() * 10}s`,
+            }}
+          >
+            {[
+              '#!/bin/bash',
+              '<?php',
+              'function()',
+              'if($auth)',
+              'SELECT',
+              'POST /',
+              'GET /api',
+              'HTTP/1.1'
+            ][Math.floor(Math.random() * 8)]}
+          </div>
+        ))}
+
+        {/* Cyber particles */}
+        {Array.from({ length: 20 }).map((_, i) => (
+          <div
+            key={`particle-${i}`}
+            className="cyber-particles"
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 15}s`,
+              animationDuration: `${10 + Math.random() * 5}s`,
+            }}
+          />
+        ))}
+      </div>
       {/* Header */}
-      <header className="border-b border-primary/20 bg-card/50 backdrop-blur-md">
+      <header className="border-b border-primary/20 bg-card/50 backdrop-blur-md relative z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -189,7 +262,7 @@ How can I assist you with your security research today?`;
         </div>
       </header>
 
-      <div className="flex-1 flex">
+      <div className="flex-1 flex relative z-10">
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col">
           {/* Messages Area */}
