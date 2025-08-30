@@ -55,6 +55,37 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
+  const callGeminiAPI = async (prompt: string) => {
+    try {
+      const response = await fetch(
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyAXHfPQKtTuqdix-8GeYiNOxLOIsnQpCTw',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: prompt
+              }]
+            }]
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.candidates[0].content.parts[0].text;
+    } catch (error) {
+      console.error('Error calling Gemini API:', error);
+      return "I apologize, but I'm currently experiencing technical difficulties. Please try again shortly.";
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!input.trim()) return;
 
@@ -69,80 +100,30 @@ const Chat = () => {
     setInput('');
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    // Call Gemini API
+    try {
+      const response = await callGeminiAPI(input);
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: generateMockResponse(input),
+        content: response,
         timestamp: new Date()
       };
+      
       setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: "Sorry, I encountered an error processing your request. Please try again.",
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 2000);
-  };
-
-  const generateMockResponse = (prompt: string): string => {
-    if (prompt.toLowerCase().includes('vulnerability') || prompt.toLowerCase().includes('triage')) {
-      return `Based on your vulnerability scan, I recommend prioritizing vulnerabilities in this order:
-
-**Critical Priority:**
-1. Remote Code Execution (RCE) vulnerabilities - Immediate patching required
-2. SQL Injection flaws in authentication systems
-3. Unpatched critical CVEs with public exploits
-
-**High Priority:**
-4. Cross-Site Scripting (XSS) in user-facing applications
-5. Privilege escalation vulnerabilities
-6. Weak authentication mechanisms
-
-**Ethical Verification Steps:**
-- Test only in isolated environments
-- Use read-only proof-of-concept exploits
-- Document everything for responsible disclosure
-- Never access sensitive data
-
-Would you like me to help you create a detailed remediation plan for any specific vulnerability?`;
     }
-
-    if (prompt.toLowerCase().includes('disclosure') || prompt.toLowerCase().includes('report')) {
-      return `I'll help you create a professional responsible disclosure report. Here's a template structure:
-
-**Vulnerability Report Template:**
-
-**Summary:**
-- Vulnerability Type: [e.g., SQL Injection]
-- Severity: [Critical/High/Medium/Low]
-- Affected Component: [Specific system/application]
-
-**Technical Details:**
-- Attack Vector: [How the vulnerability can be exploited]
-- Impact: [Potential consequences]
-- Proof of Concept: [Safe demonstration]
-
-**Remediation:**
-- Immediate steps for mitigation
-- Long-term fixes
-- Security best practices
-
-**Timeline:**
-- Discovery date
-- Initial contact
-- Expected resolution timeframe
-
-Would you like me to help you fill in the specific details for your vulnerability?`;
-    }
-
-    return `Thank you for your security research question! As CyberCat, I'm designed to assist with:
-
-• **Vulnerability Triage** - Prioritizing and analyzing security findings
-• **Responsible Disclosure** - Creating professional security reports
-• **Safe Verification** - Suggesting ethical testing methodologies
-• **Remediation Guidance** - Providing actionable security solutions
-
-I maintain strict ethical standards and support only legitimate security research. All recommendations follow responsible disclosure principles and industry best practices.
-
-How can I assist you with your security research today?`;
   };
 
   const handleExampleClick = (prompt: string) => {
