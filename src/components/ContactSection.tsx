@@ -84,6 +84,7 @@ const ContactSection = () => {
                 <Button 
                   variant="outline" 
                   className="cyber-border w-full group-hover:bg-primary/10"
+                  onClick={() => window.location.href = '/chat'}
                 >
                   {option.action}
                   <ArrowRight className="ml-2 w-4 h-4" />

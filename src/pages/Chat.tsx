@@ -1,0 +1,329 @@
+import { useState, useRef, useEffect } from 'react';
+import { Send, Sparkles, Zap, Shield, FileText, Bot, User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import cybercatLogo from '@/assets/cybercat-logo.jpg';
+
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
+const Chat = () => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const examplePrompts = [
+    {
+      icon: Shield,
+      title: "Vulnerability Triage",
+      prompt: "I have a Nessus scan with 200+ findings. Help me prioritize the critical vulnerabilities that need immediate attention.",
+      color: "text-neon-red"
+    },
+    {
+      icon: FileText,
+      title: "Disclosure Report",
+      prompt: "Create a responsible disclosure report for a SQL injection vulnerability I found in a web application's login form.",
+      color: "text-neon-purple"
+    },
+    {
+      icon: Zap,
+      title: "Safe Verification",
+      prompt: "Suggest safe manual verification steps for a suspected buffer overflow vulnerability without causing system damage.",
+      color: "text-neon-blue"
+    },
+    {
+      icon: Sparkles,
+      title: "Remediation Guide",
+      prompt: "Provide remediation strategies for a cross-site scripting (XSS) vulnerability found in user input fields.",
+      color: "text-primary"
+    }
+  ];
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSendMessage = async () => {
+    if (!input.trim()) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    // Simulate AI response
+    setTimeout(() => {
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: generateMockResponse(input),
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+      setIsLoading(false);
+    }, 2000);
+  };
+
+  const generateMockResponse = (prompt: string): string => {
+    if (prompt.toLowerCase().includes('vulnerability') || prompt.toLowerCase().includes('triage')) {
+      return `Based on your vulnerability scan, I recommend prioritizing vulnerabilities in this order:
+
+**Critical Priority:**
+1. Remote Code Execution (RCE) vulnerabilities - Immediate patching required
+2. SQL Injection flaws in authentication systems
+3. Unpatched critical CVEs with public exploits
+
+**High Priority:**
+4. Cross-Site Scripting (XSS) in user-facing applications
+5. Privilege escalation vulnerabilities
+6. Weak authentication mechanisms
+
+**Ethical Verification Steps:**
+- Test only in isolated environments
+- Use read-only proof-of-concept exploits
+- Document everything for responsible disclosure
+- Never access sensitive data
+
+Would you like me to help you create a detailed remediation plan for any specific vulnerability?`;
+    }
+
+    if (prompt.toLowerCase().includes('disclosure') || prompt.toLowerCase().includes('report')) {
+      return `I'll help you create a professional responsible disclosure report. Here's a template structure:
+
+**Vulnerability Report Template:**
+
+**Summary:**
+- Vulnerability Type: [e.g., SQL Injection]
+- Severity: [Critical/High/Medium/Low]
+- Affected Component: [Specific system/application]
+
+**Technical Details:**
+- Attack Vector: [How the vulnerability can be exploited]
+- Impact: [Potential consequences]
+- Proof of Concept: [Safe demonstration]
+
+**Remediation:**
+- Immediate steps for mitigation
+- Long-term fixes
+- Security best practices
+
+**Timeline:**
+- Discovery date
+- Initial contact
+- Expected resolution timeframe
+
+Would you like me to help you fill in the specific details for your vulnerability?`;
+    }
+
+    return `Thank you for your security research question! As CyberCat, I'm designed to assist with:
+
+• **Vulnerability Triage** - Prioritizing and analyzing security findings
+• **Responsible Disclosure** - Creating professional security reports
+• **Safe Verification** - Suggesting ethical testing methodologies
+• **Remediation Guidance** - Providing actionable security solutions
+
+I maintain strict ethical standards and support only legitimate security research. All recommendations follow responsible disclosure principles and industry best practices.
+
+How can I assist you with your security research today?`;
+  };
+
+  const handleExampleClick = (prompt: string) => {
+    setInput(prompt);
+    textareaRef.current?.focus();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <header className="border-b border-primary/20 bg-card/50 backdrop-blur-md">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <img 
+                src={cybercatLogo} 
+                alt="CyberCat" 
+                className="w-8 h-8 animate-glow-pulse"
+              />
+              <div>
+                <h1 className="text-xl font-bold animate-text-shimmer">
+                  CyberCat AI Assistant
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Ethical Security Research Assistant
+                </p>
+              </div>
+            </div>
+            <Button 
+              variant="outline" 
+              className="cyber-border"
+              onClick={() => window.location.href = '/'}
+            >
+              Back to Home
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex-1 flex">
+        {/* Main Chat Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Messages Area */}
+          <ScrollArea className="flex-1 p-4">
+            <div className="max-w-4xl mx-auto space-y-6">
+              {messages.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="mb-8">
+                    <img 
+                      src={cybercatLogo} 
+                      alt="CyberCat" 
+                      className="w-16 h-16 mx-auto mb-4 animate-float"
+                    />
+                    <h2 className="text-2xl font-bold text-primary mb-2">
+                      Welcome to CyberCat
+                    </h2>
+                    <p className="text-muted-foreground max-w-2xl mx-auto">
+                      Your AI assistant for ethical security research. I can help with vulnerability triage, 
+                      responsible disclosure reports, safe verification steps, and remediation guidance.
+                    </p>
+                  </div>
+
+                  {/* Example Prompts */}
+                  <div className="grid md:grid-cols-2 gap-4 mt-8">
+                    {examplePrompts.map((example, index) => (
+                      <Card 
+                        key={index}
+                        className="p-4 cursor-pointer hover:glow-red transition-all duration-300 cyber-border group"
+                        onClick={() => handleExampleClick(example.prompt)}
+                      >
+                        <div className="flex items-start space-x-3">
+                          <example.icon className={`w-6 h-6 ${example.color} group-hover:animate-glow-pulse flex-shrink-0 mt-1`} />
+                          <div className="text-left">
+                            <h3 className="font-semibold text-foreground mb-2">{example.title}</h3>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              {example.prompt}
+                            </p>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                messages.map((message) => (
+                  <div 
+                    key={message.id} 
+                    className={`flex items-start space-x-3 ${
+                      message.role === 'user' ? 'justify-end' : 'justify-start'
+                    }`}
+                  >
+                    {message.role === 'assistant' && (
+                      <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center flex-shrink-0">
+                        <Bot className="w-5 h-5 text-cyber-dark" />
+                      </div>
+                    )}
+                    
+                    <div className={`max-w-3xl ${
+                      message.role === 'user' 
+                        ? 'bg-primary/20 text-foreground' 
+                        : 'bg-card/50 text-foreground'
+                    } rounded-lg p-4 cyber-border`}>
+                      <div className="whitespace-pre-wrap leading-relaxed">
+                        {message.content}
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-2">
+                        {message.timestamp.toLocaleTimeString()}
+                      </div>
+                    </div>
+
+                    {message.role === 'user' && (
+                      <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                        <User className="w-5 h-5 text-secondary" />
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+
+              {isLoading && (
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
+                    <Bot className="w-5 h-5 text-cyber-dark" />
+                  </div>
+                  <div className="bg-card/50 rounded-lg p-4 cyber-border">
+                    <div className="flex space-x-2">
+                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </div>
+          </ScrollArea>
+
+          {/* Input Area */}
+          <div className="border-t border-primary/20 bg-card/30 p-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex space-x-4">
+                <div className="flex-1 relative">
+                  <Textarea
+                    ref={textareaRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Ask about vulnerability triage, responsible disclosure, or security research..."
+                    className="min-h-[60px] max-h-32 cyber-border bg-input/50 resize-none pr-12"
+                    disabled={isLoading}
+                  />
+                  <Button
+                    onClick={handleSendMessage}
+                    disabled={!input.trim() || isLoading}
+                    size="icon"
+                    className="absolute right-2 bottom-2 bg-gradient-primary text-cyber-dark hover:animate-glow-pulse"
+                  >
+                    <Send className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex justify-center mt-3">
+                <p className="text-xs text-muted-foreground text-center">
+                  CyberCat is designed for ethical security research only. Always follow responsible disclosure practices.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Chat;

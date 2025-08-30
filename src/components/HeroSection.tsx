@@ -32,7 +32,11 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" className="bg-gradient-animated text-cyber-dark font-semibold animate-glow-cycle">
+            <Button 
+              size="lg" 
+              className="bg-gradient-animated text-cyber-dark font-semibold animate-glow-cycle"
+              onClick={() => window.location.href = '/chat'}
+            >
               Start Free Trial
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>

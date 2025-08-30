@@ -41,7 +41,11 @@ const Navigation = () => {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </a>
             ))}
-            <Button variant="outline" className="cyber-border glow-cyan">
+            <Button 
+              variant="outline" 
+              className="cyber-border glow-cyan"
+              onClick={() => window.location.href = '/chat'}
+            >
               Get Started
             </Button>
           </div>
@@ -73,7 +77,11 @@ const Navigation = () => {
                   {item.name}
                 </a>
               ))}
-              <Button variant="outline" className="cyber-border glow-cyan w-fit">
+              <Button 
+                variant="outline" 
+                className="cyber-border glow-cyan w-fit"
+                onClick={() => window.location.href = '/chat'}
+              >
                 Get Started
               </Button>
             </div>
