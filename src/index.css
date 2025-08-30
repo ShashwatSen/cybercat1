@@ -208,4 +208,113 @@ All colors MUST be HSL.
       box-shadow: var(--glow-blue);
     }
   }
+
+  /* Enhanced Text Animations */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      filter: drop-shadow(0 0 8px currentColor);
+      transform: scale(1);
+    }
+    50% {
+      filter: drop-shadow(0 0 20px currentColor);
+      transform: scale(1.05);
+    }
+  }
+
+  .animate-text-shimmer {
+    background: linear-gradient(90deg, 
+      hsl(var(--neon-red)), 
+      hsl(var(--neon-purple)), 
+      hsl(var(--neon-blue)), 
+      hsl(var(--neon-red))
+    );
+    background-size: 400% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animate-typing {
+    overflow: hidden;
+    border-right: 2px solid hsl(var(--primary));
+    white-space: nowrap;
+    animation: typing 3s steps(30) 1s both, blink 1s infinite;
+  }
+
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  @keyframes blink {
+    50% { border-color: transparent; }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.6s ease-out;
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-cyber-glitch {
+    animation: cyber-glitch 4s ease-in-out infinite;
+  }
+
+  @keyframes cyber-glitch {
+    0%, 95%, 100% {
+      text-shadow: 
+        0 0 5px hsl(var(--primary)),
+        0 0 10px hsl(var(--primary)),
+        0 0 15px hsl(var(--primary));
+    }
+    96% {
+      text-shadow: 
+        -2px 0 hsl(var(--neon-red)),
+        2px 0 hsl(var(--neon-blue));
+    }
+    97% {
+      text-shadow: 
+        2px 0 hsl(var(--neon-red)),
+        -2px 0 hsl(var(--neon-blue));
+    }
+    98% {
+      text-shadow: 
+        0 0 5px hsl(var(--primary)),
+        0 0 10px hsl(var(--primary)),
+        0 0 15px hsl(var(--primary));
+    }
+  }
 }

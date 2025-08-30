@@ -51,8 +51,8 @@ const FeaturesSection = () => {
     <section id="features" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-slide-up">
+            <span className="animate-text-shimmer animate-glow-pulse">
               Powerful Features
             </span>
           </h2>

@@ -29,8 +29,8 @@ const AboutSection = () => {
     <section id="about" className="py-20 bg-gradient-dark">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="bg-gradient-accent bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-slide-up">
+            <span className="animate-text-shimmer animate-glow-pulse">
               About CyberCat
             </span>
           </h2>

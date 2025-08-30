@@ -15,7 +15,7 @@ const HeroSection = () => {
               alt="CyberCat" 
               className="w-16 h-16 animate-float animate-glow-cycle"
             />
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-animated bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-bold animate-text-shimmer animate-cyber-glitch">
               CyberCat
             </h1>
           </div>
