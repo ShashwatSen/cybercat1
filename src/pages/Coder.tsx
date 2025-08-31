@@ -7,6 +7,8 @@ import { ArrowLeft, Send, Bot, User, Code, Terminal } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import cybercatLogo from '@/assets/cybercat-logo.jpg';
+import FileExplorer, { FileItem } from '@/components/coder/FileExplorer';
+import FileTabs from '@/components/coder/FileTabs';
 
 interface Message {
   id: string;
@@ -17,8 +19,43 @@ interface Message {
 
 const Coder = () => {
   const navigate = useNavigate();
-  const [code, setCode] = useState('// Welcome to CyberCat Code Editor\n// Start coding your security tools here...\n\nfunction hackTheGibson() {\n  console.log("I\'m in!");\n}\n\nhackTheGibson();');
-  const [language, setLanguage] = useState('javascript');
+  const [files, setFiles] = useState<FileItem[]>([
+    {
+      id: '1',
+      name: 'src',
+      type: 'folder',
+      path: 'src',
+      expanded: true,
+      children: [
+        {
+          id: '2',
+          name: 'main.js',
+          type: 'file',
+          path: 'src/main.js',
+          language: 'javascript',
+          content: '// Welcome to CyberCat Code Editor\n// Start coding your security tools here...\n\nfunction hackTheGibson() {\n  console.log("I\'m in!");\n}\n\nhackTheGibson();'
+        },
+        {
+          id: '3',
+          name: 'utils.py',
+          type: 'file',
+          path: 'src/utils.py',
+          language: 'python',
+          content: '# Python security utilities\n# Add your penetration testing tools here\n\ndef scan_ports(target):\n    print(f"Scanning {target}...")\n    pass\n\nif __name__ == "__main__":\n    scan_ports("localhost")'
+        }
+      ]
+    },
+    {
+      id: '4',
+      name: 'tools',
+      type: 'folder',
+      path: 'tools',
+      expanded: false,
+      children: []
+    }
+  ]);
+  const [openFiles, setOpenFiles] = useState<FileItem[]>([]);
+  const [activeFile, setActiveFile] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +68,162 @@ const Coder = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const findFileById = (files: FileItem[], id: string): FileItem | null => {
+    for (const file of files) {
+      if (file.id === id) return file;
+      if (file.children) {
+        const found = findFileById(file.children, id);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
+  const updateFileContent = (fileId: string, content: string) => {
+    const updateFiles = (files: FileItem[]): FileItem[] => {
+      return files.map(file => {
+        if (file.id === fileId) {
+          return { ...file, content };
+        }
+        if (file.children) {
+          return { ...file, children: updateFiles(file.children) };
+        }
+        return file;
+      });
+    };
+    setFiles(updateFiles(files));
+    
+    // Update open files
+    setOpenFiles(prev => prev.map(file => 
+      file.id === fileId ? { ...file, content } : file
+    ));
+  };
+
+  const getFileLanguage = (filename: string): string => {
+    const extension = filename.split('.').pop()?.toLowerCase();
+    const languageMap: { [key: string]: string } = {
+      'js': 'javascript',
+      'jsx': 'javascript',
+      'ts': 'typescript',
+      'tsx': 'typescript',
+      'py': 'python',
+      'cpp': 'cpp',
+      'c': 'cpp',
+      'java': 'java',
+      'go': 'go',
+      'sh': 'bash',
+      'bash': 'bash',
+      'html': 'html',
+      'css': 'css',
+      'json': 'json',
+      'xml': 'xml',
+      'sql': 'sql',
+    };
+    return languageMap[extension || ''] || 'plaintext';
+  };
+
+  const handleFileSelect = (file: FileItem) => {
+    if (file.type === 'file') {
+      // Add to open files if not already open
+      if (!openFiles.find(f => f.id === file.id)) {
+        setOpenFiles(prev => [...prev, file]);
+      }
+      setActiveFile(file.id);
+    }
+  };
+
+  const handleTabClose = (fileId: string) => {
+    setOpenFiles(prev => prev.filter(f => f.id !== fileId));
+    if (activeFile === fileId) {
+      const remainingFiles = openFiles.filter(f => f.id !== fileId);
+      setActiveFile(remainingFiles.length > 0 ? remainingFiles[remainingFiles.length - 1].id : null);
+    }
+  };
+
+  const handleFileCreate = (name: string, type: 'file' | 'folder', parentPath?: string) => {
+    const newId = Date.now().toString();
+    const newItem: FileItem = {
+      id: newId,
+      name,
+      type,
+      path: parentPath ? `${parentPath}/${name}` : name,
+      content: type === 'file' ? '' : undefined,
+      language: type === 'file' ? getFileLanguage(name) : undefined,
+      children: type === 'folder' ? [] : undefined,
+      expanded: type === 'folder' ? false : undefined,
+    };
+
+    const addToFiles = (files: FileItem[]): FileItem[] => {
+      if (!parentPath) {
+        return [...files, newItem];
+      }
+      return files.map(file => {
+        if (file.path === parentPath && file.type === 'folder') {
+          return {
+            ...file,
+            children: [...(file.children || []), newItem],
+            expanded: true
+          };
+        }
+        if (file.children) {
+          return { ...file, children: addToFiles(file.children) };
+        }
+        return file;
+      });
+    };
+
+    setFiles(addToFiles(files));
+  };
+
+  const handleFileRename = (id: string, newName: string) => {
+    const renameInFiles = (files: FileItem[]): FileItem[] => {
+      return files.map(file => {
+        if (file.id === id) {
+          const newPath = file.path.replace(/[^/]+$/, newName);
+          return { ...file, name: newName, path: newPath };
+        }
+        if (file.children) {
+          return { ...file, children: renameInFiles(file.children) };
+        }
+        return file;
+      });
+    };
+    setFiles(renameInFiles(files));
+  };
+
+  const handleFileDelete = (id: string) => {
+    const deleteFromFiles = (files: FileItem[]): FileItem[] => {
+      return files.filter(file => {
+        if (file.id === id) return false;
+        if (file.children) {
+          file.children = deleteFromFiles(file.children);
+        }
+        return true;
+      });
+    };
+    setFiles(deleteFromFiles(files));
+    
+    // Remove from open files and close tab
+    handleTabClose(id);
+  };
+
+  const handleFolderToggle = (id: string) => {
+    const toggleInFiles = (files: FileItem[]): FileItem[] => {
+      return files.map(file => {
+        if (file.id === id && file.type === 'folder') {
+          return { ...file, expanded: !file.expanded };
+        }
+        if (file.children) {
+          return { ...file, children: toggleInFiles(file.children) };
+        }
+        return file;
+      });
+    };
+    setFiles(toggleInFiles(files));
+  };
+
+  const currentFile = activeFile ? openFiles.find(f => f.id === activeFile) : null;
 
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -50,10 +243,11 @@ const Coder = () => {
       // Simulate API call with context about current code
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      const currentFileInfo = currentFile ? `Currently editing: ${currentFile.name} (${currentFile.language})` : 'No file selected';
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `I can help you with your ${language} code! Based on your current editor content, I notice you're working on security-related functions. Here are some suggestions:\n\n1. Add proper error handling\n2. Consider input validation\n3. Use secure coding practices\n\nWould you like me to help optimize your code or explain any security concepts?`,
+        content: `I can help you with your code! ${currentFileInfo}\n\nBased on your question, here are some suggestions:\n\n1. Add proper error handling\n2. Consider input validation\n3. Use secure coding practices\n4. Follow best practices for ${currentFile?.language || 'your language'}\n\nWould you like me to help optimize your code or explain any security concepts?`,
         timestamp: new Date(),
       };
 
@@ -71,15 +265,6 @@ const Coder = () => {
       handleSendMessage();
     }
   };
-
-  const languages = [
-    { value: 'javascript', label: 'JavaScript' },
-    { value: 'python', label: 'Python' },
-    { value: 'bash', label: 'Bash' },
-    { value: 'cpp', label: 'C++' },
-    { value: 'java', label: 'Java' },
-    { value: 'go', label: 'Go' },
-  ];
 
   return (
     <div className="h-screen flex flex-col bg-background">
@@ -110,46 +295,74 @@ const Coder = () => {
         </div>
         
         <div className="flex items-center space-x-4">
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="bg-background border border-primary/20 rounded-md px-3 py-1 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-          >
-            {languages.map((lang) => (
-              <option key={lang.value} value={lang.value}>
-                {lang.label}
-              </option>
-            ))}
-          </select>
+          {currentFile && (
+            <span className="text-sm text-muted-foreground">
+              {currentFile.name} - {currentFile.language}
+            </span>
+          )}
         </div>
       </header>
 
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
         <ResizablePanelGroup direction="horizontal" className="h-full">
+          {/* File Explorer Panel */}
+          <ResizablePanel defaultSize={20} minSize={15} maxSize={35}>
+            <FileExplorer
+              files={files}
+              selectedFile={activeFile}
+              onFileSelect={handleFileSelect}
+              onFileCreate={handleFileCreate}
+              onFileRename={handleFileRename}
+              onFileDelete={handleFileDelete}
+              onFolderToggle={handleFolderToggle}
+            />
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
           {/* Code Editor Panel */}
-          <ResizablePanel defaultSize={75} minSize={50}>
-            <div className="h-full bg-background">
-              <Editor
-                height="100%"
-                language={language}
-                value={code}
-                onChange={(value) => setCode(value || '')}
-                theme="vs-dark"
-                options={{
-                  minimap: { enabled: true },
-                  fontSize: 14,
-                  lineNumbers: 'on',
-                  roundedSelection: false,
-                  scrollBeyondLastLine: false,
-                  automaticLayout: true,
-                  wordWrap: 'on',
-                  bracketPairColorization: { enabled: true },
-                  suggestOnTriggerCharacters: true,
-                  acceptSuggestionOnEnter: 'on',
-                  tabCompletion: 'on',
-                }}
+          <ResizablePanel defaultSize={55} minSize={30}>
+            <div className="h-full flex flex-col bg-background">
+              <FileTabs
+                openFiles={openFiles}
+                activeFile={activeFile}
+                onTabSelect={setActiveFile}
+                onTabClose={handleTabClose}
               />
+              
+              {currentFile ? (
+                <Editor
+                  height="100%"
+                  language={currentFile.language || 'plaintext'}
+                  value={currentFile.content || ''}
+                  onChange={(value) => updateFileContent(currentFile.id, value || '')}
+                  theme="vs-dark"
+                  options={{
+                    minimap: { enabled: true },
+                    fontSize: 14,
+                    lineNumbers: 'on',
+                    roundedSelection: false,
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true,
+                    wordWrap: 'on',
+                    bracketPairColorization: { enabled: true },
+                    suggestOnTriggerCharacters: true,
+                    acceptSuggestionOnEnter: 'on',
+                    tabCompletion: 'on',
+                    formatOnPaste: true,
+                    formatOnType: true,
+                  }}
+                />
+              ) : (
+                <div className="flex-1 flex items-center justify-center text-muted-foreground">
+                  <div className="text-center">
+                    <Code className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg mb-2">Welcome to CyberCat Coder</p>
+                    <p className="text-sm">Select a file from the explorer to start coding</p>
+                  </div>
+                </div>
+              )}
             </div>
           </ResizablePanel>
 
