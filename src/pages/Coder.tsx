@@ -300,6 +300,15 @@ const Coder = () => {
               {currentFile.name} - {currentFile.language}
             </span>
           )}
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="cyber-border"
+            onClick={() => window.location.href = '/terminal'}
+          >
+            <Terminal className="w-4 h-4 mr-2" />
+            Terminal
+          </Button>
         </div>
       </header>
 

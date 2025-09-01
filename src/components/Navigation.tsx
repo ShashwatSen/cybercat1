@@ -9,7 +9,7 @@ const Navigation = () => {
   const navItems = [
     { name: 'Features', href: '#features' },
     { name: 'How It Works', href: '#how-it-works' },
-    { name: 'Coder', href: '/coder' },
+    { name: 'Dashboard', href: '/dashboard' },
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '#contact' },
   ];
@@ -45,7 +45,7 @@ const Navigation = () => {
             <Button 
               variant="outline" 
               className="cyber-border glow-cyan"
-              onClick={() => window.location.href = '/chat'}
+              onClick={() => window.location.href = '/dashboard'}
             >
               Get Started
             </Button>
@@ -81,7 +81,7 @@ const Navigation = () => {
               <Button 
                 variant="outline" 
                 className="cyber-border glow-cyan w-fit"
-                onClick={() => window.location.href = '/chat'}
+                onClick={() => window.location.href = '/dashboard'}
               >
                 Get Started
               </Button>

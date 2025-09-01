@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Zap, Shield, FileText, Bot, User } from 'lucide-react';
+import { Send, Sparkles, Zap, Shield, FileText, Bot, User, Terminal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
@@ -232,13 +232,24 @@ const Chat = () => {
                 </p>
               </div>
             </div>
-            <Button 
-              variant="outline" 
-              className="cyber-border"
-              onClick={() => window.location.href = '/'}
-            >
-              Back to Home
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="cyber-border"
+                onClick={() => window.location.href = '/terminal'}
+              >
+                <Terminal className="w-4 h-4 mr-2" />
+                Terminal
+              </Button>
+              <Button 
+                variant="outline" 
+                className="cyber-border"
+                onClick={() => window.location.href = '/'}
+              >
+                Back to Home
+              </Button>
+            </div>
           </div>
         </div>
       </header>
