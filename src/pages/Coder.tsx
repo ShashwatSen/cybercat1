@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { ArrowLeft, Send, Bot, User, Code, Terminal } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { SidebarProvider, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
+import { DashboardSidebar } from '@/components/DashboardSidebar';
+import { Send, Bot, User, Code, Terminal } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import cybercatLogo from '@/assets/cybercat-logo.jpg';
 import FileExplorer, { FileItem } from '@/components/coder/FileExplorer';
@@ -18,7 +19,6 @@ interface Message {
 }
 
 const Coder = () => {
-  const navigate = useNavigate();
   const [files, setFiles] = useState<FileItem[]>([
     {
       id: '1',
@@ -267,221 +267,211 @@ const Coder = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-background">
-      {/* Navigation Header */}
-      <header className="flex items-center justify-between p-4 border-b border-primary/20 bg-background/80 backdrop-blur-md">
-        <div className="flex items-center space-x-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/')}
-            className="text-primary hover:bg-primary/10"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div className="flex items-center space-x-3">
-            <img 
-              src={cybercatLogo} 
-              alt="CyberCat" 
-              className="w-8 h-8 animate-glow-pulse"
-            />
-            <div className="flex items-center space-x-2">
-              <Code className="w-5 h-5 text-primary" />
-              <span className="text-xl font-bold text-primary text-glow">
-                CyberCat Coder
-              </span>
-            </div>
-          </div>
-        </div>
+    <SidebarProvider>
+      <div className="h-screen w-full flex bg-background">
+        <DashboardSidebar />
         
-        <div className="flex items-center space-x-4">
-          {currentFile && (
-            <span className="text-sm text-muted-foreground">
-              {currentFile.name} - {currentFile.language}
-            </span>
-          )}
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="cyber-border"
-            onClick={() => window.location.href = '/terminal'}
-          >
-            <Terminal className="w-4 h-4 mr-2" />
-            Terminal
-          </Button>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="flex-1 overflow-hidden">
-        <ResizablePanelGroup direction="horizontal" className="h-full">
-          {/* File Explorer Panel */}
-          <ResizablePanel defaultSize={20} minSize={15} maxSize={35}>
-            <FileExplorer
-              files={files}
-              selectedFile={activeFile}
-              onFileSelect={handleFileSelect}
-              onFileCreate={handleFileCreate}
-              onFileRename={handleFileRename}
-              onFileDelete={handleFileDelete}
-              onFolderToggle={handleFolderToggle}
-            />
-          </ResizablePanel>
-
-          <ResizableHandle withHandle />
-
-          {/* Code Editor Panel */}
-          <ResizablePanel defaultSize={55} minSize={30}>
-            <div className="h-full flex flex-col bg-background">
-              <FileTabs
-                openFiles={openFiles}
-                activeFile={activeFile}
-                onTabSelect={setActiveFile}
-                onTabClose={handleTabClose}
-              />
-              
-              {currentFile ? (
-                <Editor
-                  height="100%"
-                  language={currentFile.language || 'plaintext'}
-                  value={currentFile.content || ''}
-                  onChange={(value) => updateFileContent(currentFile.id, value || '')}
-                  theme="vs-dark"
-                  options={{
-                    minimap: { enabled: true },
-                    fontSize: 14,
-                    lineNumbers: 'on',
-                    roundedSelection: false,
-                    scrollBeyondLastLine: false,
-                    automaticLayout: true,
-                    wordWrap: 'on',
-                    bracketPairColorization: { enabled: true },
-                    suggestOnTriggerCharacters: true,
-                    acceptSuggestionOnEnter: 'on',
-                    tabCompletion: 'on',
-                    formatOnPaste: true,
-                    formatOnType: true,
-                  }}
+        <SidebarInset className="flex-1 flex flex-col">
+          {/* Navigation Header */}
+          <header className="flex items-center justify-between p-4 border-b border-primary/20 bg-background/80 backdrop-blur-md">
+            <div className="flex items-center space-x-4">
+              <SidebarTrigger className="text-primary hover:bg-primary/10" />
+              <div className="flex items-center space-x-3">
+                <img 
+                  src={cybercatLogo} 
+                  alt="CyberCat" 
+                  className="w-8 h-8 animate-glow-pulse"
                 />
-              ) : (
-                <div className="flex-1 flex items-center justify-center text-muted-foreground">
-                  <div className="text-center">
-                    <Code className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg mb-2">Welcome to CyberCat Coder</p>
-                    <p className="text-sm">Select a file from the explorer to start coding</p>
-                  </div>
+                <div className="flex items-center space-x-2">
+                  <Code className="w-5 h-5 text-primary" />
+                  <span className="text-xl font-bold text-primary text-glow">
+                    CyberCat Coder
+                  </span>
                 </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              {currentFile && (
+                <span className="text-sm text-muted-foreground">
+                  {currentFile.name} - {currentFile.language}
+                </span>
               )}
             </div>
-          </ResizablePanel>
+          </header>
 
-          <ResizableHandle withHandle />
+          {/* Main Content */}
+          <div className="flex-1 overflow-hidden">
+            <ResizablePanelGroup direction="horizontal" className="h-full">
+              {/* File Explorer Panel */}
+              <ResizablePanel defaultSize={20} minSize={15} maxSize={35}>
+                <FileExplorer
+                  files={files}
+                  selectedFile={activeFile}
+                  onFileSelect={handleFileSelect}
+                  onFileCreate={handleFileCreate}
+                  onFileRename={handleFileRename}
+                  onFileDelete={handleFileDelete}
+                  onFolderToggle={handleFolderToggle}
+                />
+              </ResizablePanel>
 
-          {/* AI Assistant Panel */}
-          <ResizablePanel defaultSize={25} minSize={20}>
-            <div className="h-full flex flex-col bg-muted/20 border-l border-primary/20">
-              {/* Assistant Header */}
-              <div className="p-4 border-b border-primary/20 bg-background/50">
-                <div className="flex items-center space-x-2">
-                  <Bot className="w-5 h-5 text-primary" />
-                  <span className="font-semibold text-primary">Code Assistant</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Ask me about your code or security concepts
-                </p>
-              </div>
+              <ResizableHandle withHandle />
 
-              {/* Messages Area */}
-              <ScrollArea className="flex-1 p-4">
-                <div className="space-y-4">
-                  {messages.length === 0 ? (
-                    <div className="text-center text-muted-foreground">
-                      <Terminal className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">Start a conversation with your AI coding assistant</p>
-                    </div>
+              {/* Code Editor Panel */}
+              <ResizablePanel defaultSize={55} minSize={30}>
+                <div className="h-full flex flex-col bg-background">
+                  <FileTabs
+                    openFiles={openFiles}
+                    activeFile={activeFile}
+                    onTabSelect={setActiveFile}
+                    onTabClose={handleTabClose}
+                  />
+                  
+                  {currentFile ? (
+                    <Editor
+                      height="100%"
+                      language={currentFile.language || 'plaintext'}
+                      value={currentFile.content || ''}
+                      onChange={(value) => updateFileContent(currentFile.id, value || '')}
+                      theme="vs-dark"
+                      options={{
+                        minimap: { enabled: true },
+                        fontSize: 14,
+                        lineNumbers: 'on',
+                        roundedSelection: false,
+                        scrollBeyondLastLine: false,
+                        automaticLayout: true,
+                        wordWrap: 'on',
+                        bracketPairColorization: { enabled: true },
+                        suggestOnTriggerCharacters: true,
+                        acceptSuggestionOnEnter: 'on',
+                        tabCompletion: 'on',
+                        formatOnPaste: true,
+                        formatOnType: true,
+                      }}
+                    />
                   ) : (
-                    messages.map((message) => (
-                      <div
-                        key={message.id}
-                        className={`flex space-x-2 ${
-                          message.role === 'user' ? 'justify-end' : 'justify-start'
-                        }`}
-                      >
-                        <div
-                          className={`flex space-x-2 max-w-[85%] ${
-                            message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
-                          }`}
-                        >
-                          <div className="flex-shrink-0">
-                            {message.role === 'user' ? (
-                              <User className="w-6 h-6 text-primary" />
-                            ) : (
-                              <Bot className="w-6 h-6 text-primary animate-glow-pulse" />
-                            )}
-                          </div>
+                    <div className="flex-1 flex items-center justify-center text-muted-foreground">
+                      <div className="text-center">
+                        <Code className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                        <p className="text-lg mb-2">Welcome to CyberCat Coder</p>
+                        <p className="text-sm">Select a file from the explorer to start coding</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </ResizablePanel>
+
+              <ResizableHandle withHandle />
+
+              {/* AI Assistant Panel */}
+              <ResizablePanel defaultSize={25} minSize={20}>
+                <div className="h-full flex flex-col bg-muted/20 border-l border-primary/20">
+                  {/* Assistant Header */}
+                  <div className="p-4 border-b border-primary/20 bg-background/50">
+                    <div className="flex items-center space-x-2">
+                      <Bot className="w-5 h-5 text-primary" />
+                      <span className="font-semibold text-primary">Code Assistant</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Ask me about your code or security concepts
+                    </p>
+                  </div>
+
+                  {/* Messages Area */}
+                  <ScrollArea className="flex-1 p-4">
+                    <div className="space-y-4">
+                      {messages.length === 0 ? (
+                        <div className="text-center text-muted-foreground">
+                          <Terminal className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                          <p className="text-sm">Start a conversation with your AI coding assistant</p>
+                        </div>
+                      ) : (
+                        messages.map((message) => (
                           <div
-                            className={`rounded-lg p-3 text-sm ${
-                              message.role === 'user'
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-muted text-foreground'
+                            key={message.id}
+                            className={`flex space-x-2 ${
+                              message.role === 'user' ? 'justify-end' : 'justify-start'
                             }`}
                           >
-                            <p className="whitespace-pre-wrap">{message.content}</p>
-                            <p className="text-xs opacity-70 mt-1">
-                              {message.timestamp.toLocaleTimeString()}
-                            </p>
+                            <div
+                              className={`flex space-x-2 max-w-[85%] ${
+                                message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
+                              }`}
+                            >
+                              <div className="flex-shrink-0">
+                                {message.role === 'user' ? (
+                                  <User className="w-6 h-6 text-primary" />
+                                ) : (
+                                  <Bot className="w-6 h-6 text-primary animate-glow-pulse" />
+                                )}
+                              </div>
+                              <div
+                                className={`rounded-lg p-3 text-sm ${
+                                  message.role === 'user'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-muted text-foreground'
+                                }`}
+                              >
+                                <p className="whitespace-pre-wrap">{message.content}</p>
+                                <p className="text-xs opacity-70 mt-1">
+                                  {message.timestamp.toLocaleTimeString()}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                      {isLoading && (
+                        <div className="flex space-x-2 justify-start">
+                          <div className="flex space-x-2">
+                            <Bot className="w-6 h-6 text-primary animate-glow-pulse" />
+                            <div className="bg-muted rounded-lg p-3">
+                              <div className="flex space-x-1">
+                                <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                                <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))
-                  )}
-                  {isLoading && (
-                    <div className="flex space-x-2 justify-start">
-                      <div className="flex space-x-2">
-                        <Bot className="w-6 h-6 text-primary animate-glow-pulse" />
-                        <div className="bg-muted rounded-lg p-3">
-                          <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                          </div>
-                        </div>
-                      </div>
+                      )}
+                      <div ref={messagesEndRef} />
                     </div>
-                  )}
-                  <div ref={messagesEndRef} />
-                </div>
-              </ScrollArea>
+                  </ScrollArea>
 
-              {/* Input Area */}
-              <div className="p-4 border-t border-primary/20 bg-background/50">
-                <div className="flex space-x-2">
-                  <Textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Ask about your code..."
-                    className="min-h-[60px] resize-none text-sm"
-                    disabled={isLoading}
-                  />
-                  <Button
-                    onClick={handleSendMessage}
-                    disabled={!input.trim() || isLoading}
-                    size="icon"
-                    className="h-[60px] w-[60px] cyber-border glow-cyan"
-                  >
-                    <Send className="w-4 h-4" />
-                  </Button>
+                  {/* Input Area */}
+                  <div className="p-4 border-t border-primary/20 bg-background/50">
+                    <div className="flex space-x-2">
+                      <Textarea
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Ask about your code..."
+                        className="min-h-[60px] resize-none text-sm"
+                        disabled={isLoading}
+                      />
+                      <Button
+                        onClick={handleSendMessage}
+                        disabled={!input.trim() || isLoading}
+                        size="icon"
+                        className="h-[60px] w-[60px] cyber-border glow-cyan"
+                      >
+                        <Send className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2 text-center">
+                      AI assistant for secure coding practices
+                    </p>
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2 text-center">
-                  AI assistant for secure coding practices
-                </p>
-              </div>
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+          </div>
+        </SidebarInset>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 

@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ArrowLeft, Terminal as TerminalIcon, Play, Trash2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { SidebarProvider, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
+import { DashboardSidebar } from '@/components/DashboardSidebar';
+import { Terminal as TerminalIcon, Play, Trash2 } from 'lucide-react';
 import cybercatLogo from '@/assets/cybercat-logo.jpg';
 
 interface TerminalLine {
@@ -14,7 +15,6 @@ interface TerminalLine {
 }
 
 const Terminal = () => {
-  const navigate = useNavigate();
   const [lines, setLines] = useState<TerminalLine[]>([
     {
       id: '1',
@@ -176,123 +176,122 @@ This is a simulated file system.`;
   };
 
   return (
-    <div className="min-h-screen bg-cyber-darker relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="matrix-bg"></div>
-      <div className="terminal-grid"></div>
-      <div className="code-rain"></div>
-      <div className="floating-code"></div>
-      <div className="cyber-particles"></div>
+    <SidebarProvider>
+      <div className="min-h-screen w-full flex bg-cyber-darker relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="matrix-bg"></div>
+        <div className="terminal-grid"></div>
+        <div className="code-rain"></div>
+        <div className="floating-code"></div>
+        <div className="cyber-particles"></div>
 
-      {/* Header */}
-      <header className="relative z-10 bg-background/80 backdrop-blur-md border-b border-primary/20 p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate(-1)}
-              className="text-primary hover:bg-primary/20"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div className="flex items-center space-x-3">
-              <img 
-                src={cybercatLogo} 
-                alt="CyberCat" 
-                className="w-8 h-8 animate-glow-pulse"
-              />
-              <div>
-                <h1 className="text-xl font-bold text-primary text-glow">
-                  CyberCat Terminal
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Execute commands and scripts
-                </p>
+        <DashboardSidebar />
+        
+        <SidebarInset className="flex-1 flex flex-col">
+          {/* Header */}
+          <header className="relative z-10 bg-background/80 backdrop-blur-md border-b border-primary/20 p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <SidebarTrigger className="text-primary hover:bg-primary/20" />
+                <div className="flex items-center space-x-3">
+                  <img 
+                    src={cybercatLogo} 
+                    alt="CyberCat" 
+                    className="w-8 h-8 animate-glow-pulse"
+                  />
+                  <div>
+                    <h1 className="text-xl font-bold text-primary text-glow">
+                      CyberCat Terminal
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                      Execute commands and scripts
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearTerminal}
+                  className="cyber-border"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Clear
+                </Button>
+              </div>
+            </div>
+          </header>
+
+          {/* Terminal Content */}
+          <div className="relative z-10 flex flex-col h-[calc(100vh-80px)]">
+            {/* Terminal Window */}
+            <div className="flex-1 bg-background/90 backdrop-blur-sm m-4 rounded-lg border border-primary/20 cyber-border">
+              <div className="flex items-center justify-between px-4 py-2 bg-muted/20 border-b border-primary/20 rounded-t-lg">
+                <div className="flex items-center space-x-2">
+                  <TerminalIcon className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium text-primary">Terminal</span>
+                </div>
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 rounded-full bg-destructive"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+              </div>
+
+              <ScrollArea className="h-[calc(100vh-200px)]" ref={scrollRef}>
+                <div className="p-4 font-mono text-sm">
+                  {lines.map((line) => (
+                    <div key={line.id} className={`mb-2 ${
+                      line.type === 'command' 
+                        ? 'text-primary font-semibold' 
+                        : line.type === 'error' 
+                        ? 'text-destructive' 
+                        : 'text-foreground'
+                    }`}>
+                      <pre className="whitespace-pre-wrap break-words">{line.content}</pre>
+                      {line.type === 'command' && isRunning && lines[lines.length - 1].id === line.id && (
+                        <div className="flex items-center space-x-2 mt-2">
+                          <div className="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></div>
+                          <span className="text-muted-foreground">Executing...</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+
+              {/* Command Input */}
+              <div className="border-t border-primary/20 p-4">
+                <form onSubmit={handleSubmit} className="flex items-center space-x-2">
+                  <span className="text-primary font-mono">$</span>
+                  <Input
+                    ref={inputRef}
+                    value={currentCommand}
+                    onChange={(e) => setCurrentCommand(e.target.value)}
+                    placeholder="Enter command..."
+                    disabled={isRunning}
+                    className="flex-1 bg-transparent border-none outline-none focus:ring-0 font-mono"
+                    autoFocus
+                  />
+                  <Button
+                    type="submit"
+                    size="sm"
+                    disabled={!currentCommand.trim() || isRunning}
+                    className="cyber-border"
+                  >
+                    <Play className="w-4 h-4" />
+                  </Button>
+                </form>
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Type 'help' for available commands • Press Enter to execute
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={clearTerminal}
-              className="cyber-border"
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Clear
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      {/* Terminal Content */}
-      <div className="relative z-10 flex flex-col h-[calc(100vh-80px)]">
-        {/* Terminal Window */}
-        <div className="flex-1 bg-background/90 backdrop-blur-sm m-4 rounded-lg border border-primary/20 cyber-border">
-          <div className="flex items-center justify-between px-4 py-2 bg-muted/20 border-b border-primary/20 rounded-t-lg">
-            <div className="flex items-center space-x-2">
-              <TerminalIcon className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">Terminal</span>
-            </div>
-            <div className="flex space-x-2">
-              <div className="w-3 h-3 rounded-full bg-destructive"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            </div>
-          </div>
-
-          <ScrollArea className="h-[calc(100vh-200px)]" ref={scrollRef}>
-            <div className="p-4 font-mono text-sm">
-              {lines.map((line) => (
-                <div key={line.id} className={`mb-2 ${
-                  line.type === 'command' 
-                    ? 'text-primary font-semibold' 
-                    : line.type === 'error' 
-                    ? 'text-destructive' 
-                    : 'text-foreground'
-                }`}>
-                  <pre className="whitespace-pre-wrap break-words">{line.content}</pre>
-                  {line.type === 'command' && isRunning && lines[lines.length - 1].id === line.id && (
-                    <div className="flex items-center space-x-2 mt-2">
-                      <div className="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></div>
-                      <span className="text-muted-foreground">Executing...</span>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-
-          {/* Command Input */}
-          <div className="border-t border-primary/20 p-4">
-            <form onSubmit={handleSubmit} className="flex items-center space-x-2">
-              <span className="text-primary font-mono">$</span>
-              <Input
-                ref={inputRef}
-                value={currentCommand}
-                onChange={(e) => setCurrentCommand(e.target.value)}
-                placeholder="Enter command..."
-                disabled={isRunning}
-                className="flex-1 bg-transparent border-none outline-none focus:ring-0 font-mono"
-                autoFocus
-              />
-              <Button
-                type="submit"
-                size="sm"
-                disabled={!currentCommand.trim() || isRunning}
-                className="cyber-border"
-              >
-                <Play className="w-4 h-4" />
-              </Button>
-            </form>
-            <div className="mt-2 text-xs text-muted-foreground">
-              Type 'help' for available commands • Press Enter to execute
-            </div>
-          </div>
-        </div>
+        </SidebarInset>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
