@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { DashboardSidebar } from '@/components/DashboardSidebar';
 import { useNavigate } from 'react-router-dom';
 import { 
   MessageSquare, 
@@ -12,7 +14,8 @@ import {
   ChevronRight,
   Sparkles,
   Rocket,
-  Target
+  Target,
+  Menu
 } from 'lucide-react';
 import cybercatLogo from '@/assets/cybercat-logo.jpg';
 
@@ -68,46 +71,51 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-cyber-darker relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="matrix-bg"></div>
-      <div className="terminal-grid"></div>
-      <div className="code-rain"></div>
-      <div className="floating-code"></div>
-      <div className="cyber-particles"></div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-cyber-darker relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="matrix-bg"></div>
+        <div className="terminal-grid"></div>
+        <div className="code-rain"></div>
+        <div className="floating-code"></div>
+        <div className="cyber-particles"></div>
 
-      {/* Header */}
-      <header className="relative z-10 bg-background/80 backdrop-blur-md border-b border-primary/20 p-6">
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <img 
-                src={cybercatLogo} 
-                alt="CyberCat" 
-                className="w-12 h-12 animate-glow-pulse"
-              />
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent animate-text-shimmer">
-                  CyberCat Dashboard
-                </h1>
-                <p className="text-muted-foreground">
-                  Your ethical hacking command center
-                </p>
+        <DashboardSidebar />
+
+        <div className="flex-1 flex flex-col">
+          {/* Header */}
+          <header className="relative z-10 bg-background/80 backdrop-blur-md border-b border-primary/20 p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <SidebarTrigger className="text-primary" />
+                <div className="flex items-center space-x-3">
+                  <img 
+                    src={cybercatLogo} 
+                    alt="CyberCat" 
+                    className="w-10 h-10 animate-glow-pulse"
+                  />
+                  <div>
+                    <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent animate-text-shimmer">
+                      CyberCat Dashboard
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                      Your ethical hacking command center
+                    </p>
+                  </div>
+                </div>
               </div>
+              <Button
+                variant="outline"
+                onClick={() => navigate('/')}
+                className="cyber-border"
+              >
+                Back to Home
+              </Button>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => navigate('/')}
-              className="cyber-border"
-            >
-              Back to Home
-            </Button>
-          </div>
-        </div>
-      </header>
+          </header>
 
-      {/* Main Content */}
-      <main className="relative z-10 container mx-auto px-6 py-8">
+          {/* Main Content */}
+          <main className="relative z-10 flex-1 p-6 overflow-auto">
         {/* Welcome Section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center space-x-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
@@ -229,8 +237,10 @@ const Dashboard = () => {
             🛡️ All tools are designed for ethical security research and educational purposes only
           </p>
         </div>
-      </main>
-    </div>
+          </main>
+        </div>
+      </div>
+    </SidebarProvider>
   );
 };
 
