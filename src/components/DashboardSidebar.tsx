@@ -103,8 +103,8 @@ export function DashboardSidebar() {
   };
 
   return (
-    <Sidebar className={open ? "w-64" : "w-16"} collapsible="icon">
-      <SidebarHeader className="border-b border-primary/20 p-4">
+    <Sidebar className={`${open ? "w-64" : "w-16"} bg-background/95 backdrop-blur-sm border-r border-border/50`} collapsible="icon">
+      <SidebarHeader className="border-b border-border/50 p-4 bg-background/50">
         <div className="flex items-center space-x-3">
           <img 
             src={cybercatLogo} 
@@ -120,9 +120,9 @@ export function DashboardSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="py-4">
+      <SidebarContent className="py-4 bg-background/30">
         <SidebarGroup>
-          <SidebarGroupLabel className={open ? "" : "sr-only"}>
+          <SidebarGroupLabel className={`text-foreground/70 font-semibold ${open ? "" : "sr-only"}`}>
             Main Tools
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -131,10 +131,10 @@ export function DashboardSidebar() {
                 <SidebarMenuItem key={tool.title}>
                   <SidebarMenuButton
                     onClick={() => handleNavigation(tool.url)}
-                    className={`cursor-pointer transition-all duration-200 ${
+                    className={`cursor-pointer transition-all duration-200 rounded-lg mx-2 ${
                       isActive(tool.url) 
-                        ? 'bg-primary/20 text-primary border-l-2 border-primary' 
-                        : 'hover:bg-primary/10 hover:text-primary'
+                        ? 'bg-primary/20 text-primary border border-primary/40 shadow-glow' 
+                        : 'hover:bg-muted/50 hover:text-foreground text-muted-foreground'
                     }`}
                   >
                     <tool.icon className="w-5 h-5 flex-shrink-0" />
@@ -157,7 +157,7 @@ export function DashboardSidebar() {
         </SidebarGroup>
 
         <SidebarGroup className="mt-6">
-          <SidebarGroupLabel className={open ? "" : "sr-only"}>
+          <SidebarGroupLabel className={`text-foreground/70 font-semibold ${open ? "" : "sr-only"}`}>
             Coming Soon
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -165,7 +165,7 @@ export function DashboardSidebar() {
               {comingSoonTools.map((tool) => (
                 <SidebarMenuItem key={tool.title}>
                   <SidebarMenuButton
-                    className="cursor-not-allowed opacity-60"
+                    className="cursor-not-allowed opacity-40 rounded-lg mx-2 text-muted-foreground/50"
                     disabled
                   >
                     <tool.icon className="w-5 h-5 flex-shrink-0" />
@@ -191,7 +191,7 @@ export function DashboardSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     onClick={() => handleNavigation(item.url)}
-                    className="cursor-pointer hover:bg-primary/10 hover:text-primary"
+                    className="cursor-pointer hover:bg-muted/50 hover:text-foreground text-muted-foreground rounded-lg mx-2 transition-all duration-200"
                   >
                     <item.icon className="w-5 h-5 flex-shrink-0" />
                     {open && (
