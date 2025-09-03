@@ -34,6 +34,9 @@ export function SettingsOverlay({ isOpen, onClose }: SettingsOverlayProps) {
     notifications: true,
     autoSave: true,
     animations: true,
+    aiModel: 'gpt-4',
+    codeCompletion: true,
+    syntaxHighlighting: true,
   });
 
   const handleSettingChange = (key: keyof typeof settings) => {
@@ -43,6 +46,7 @@ export function SettingsOverlay({ isOpen, onClose }: SettingsOverlayProps) {
   const settingItems = [
     {
       category: 'Appearance',
+      icon: Palette,
       items: [
         {
           key: 'darkMode' as const,
@@ -54,12 +58,13 @@ export function SettingsOverlay({ isOpen, onClose }: SettingsOverlayProps) {
           key: 'animations' as const,
           label: 'Animations',
           description: 'Enable UI animations and transitions',
-          icon: Palette,
+          icon: Monitor,
         },
       ]
     },
     {
       category: 'Audio & Notifications',
+      icon: Bell,
       items: [
         {
           key: 'soundEffects' as const,
@@ -76,7 +81,8 @@ export function SettingsOverlay({ isOpen, onClose }: SettingsOverlayProps) {
       ]
     },
     {
-      category: 'Editor & Tools',
+      category: 'Development & Security',
+      icon: Shield,
       items: [
         {
           key: 'autoSave' as const,
@@ -84,83 +90,98 @@ export function SettingsOverlay({ isOpen, onClose }: SettingsOverlayProps) {
           description: 'Automatically save your work',
           icon: Shield,
         },
+        {
+          key: 'codeCompletion' as const,
+          label: 'Code Completion',
+          description: 'Enable intelligent code suggestions',
+          icon: Key,
+        },
+        {
+          key: 'syntaxHighlighting' as const,
+          label: 'Syntax Highlighting',
+          description: 'Highlight code syntax in editor',
+          icon: Monitor,
+        },
       ]
     },
   ];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-auto bg-background/95 backdrop-blur-sm border border-border/50">
-        <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <DialogTitle className="text-2xl font-bold text-primary text-glow">
-            Settings
-          </DialogTitle>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </DialogHeader>
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden p-0 bg-background/98 backdrop-blur-md border border-border/50 shadow-2xl">
+        <div className="overflow-y-auto">
+          <DialogHeader className="px-6 py-4 border-b border-border/30 bg-gradient-to-r from-primary/5 to-primary/10">
+            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              Settings & Preferences
+            </DialogTitle>
+          </DialogHeader>
 
-        <div className="space-y-6">
-          {settingItems.map((category) => (
-            <div key={category.category} className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <h3 className="text-lg font-semibold text-foreground">
-                  {category.category}
-                </h3>
-              </div>
-              
-              <div className="space-y-3">
-                {category.items.map((item) => {
-                  const IconComponent = item.icon;
-                  return (
-                    <div
-                      key={item.key}
-                      className="flex items-center justify-between p-4 rounded-lg bg-muted/30 border border-border/30 hover:bg-muted/50 transition-all duration-200"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 border border-primary/20">
-                          <IconComponent className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-foreground">
-                            {item.label}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {item.description}
-                          </div>
-                        </div>
-                      </div>
-                      <Switch
-                        checked={settings[item.key]}
-                        onCheckedChange={() => handleSettingChange(item.key)}
-                        className="data-[state=checked]:bg-primary"
-                      />
+          <div className="p-6 space-y-8">
+            {settingItems.map((category, categoryIndex) => {
+              const CategoryIcon = category.icon;
+              return (
+                <div key={category.category} className="space-y-4">
+                  <div className="flex items-center space-x-3 pb-2">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/15 border border-primary/25">
+                      <CategoryIcon className="w-4 h-4 text-primary" />
                     </div>
-                  );
-                })}
-              </div>
-              
-              {category.category !== 'Editor & Tools' && (
-                <Separator className="bg-border/30" />
-              )}
-            </div>
-          ))}
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {category.category}
+                    </h3>
+                  </div>
+                  
+                  <div className="grid gap-3">
+                    {category.items.map((item) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <div
+                          key={item.key}
+                          className="group flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-muted/40 to-muted/20 border border-border/40 hover:from-muted/60 hover:to-muted/40 hover:border-border/60 transition-all duration-300 hover:shadow-lg"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 group-hover:from-primary/15 group-hover:to-primary/10 transition-all duration-300">
+                              <IconComponent className="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                              <div className="font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
+                                {item.label}
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {item.description}
+                              </div>
+                            </div>
+                          </div>
+                          <Switch
+                            checked={settings[item.key]}
+                            onCheckedChange={() => handleSettingChange(item.key)}
+                            className="data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted-foreground/20"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  {categoryIndex < settingItems.length - 1 && (
+                    <Separator className="my-6 bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+                  )}
+                </div>
+              );
+            })}
 
-          <div className="flex items-center justify-between pt-4">
-            <div className="text-sm text-muted-foreground">
-              Settings are saved automatically
+            <div className="flex items-center justify-between pt-6 border-t border-border/30 bg-gradient-to-r from-muted/20 to-transparent rounded-lg p-4 -mx-2">
+              <div className="flex items-center space-x-2">
+                <Shield className="w-4 h-4 text-primary" />
+                <div className="text-sm text-muted-foreground">
+                  Settings are saved automatically and synced across devices
+                </div>
+              </div>
+              <Button
+                onClick={onClose}
+                className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                Done
+              </Button>
             </div>
-            <Button
-              onClick={onClose}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            >
-              Done
-            </Button>
           </div>
         </div>
       </DialogContent>
