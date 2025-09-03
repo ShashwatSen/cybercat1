@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   MessageSquare, 
@@ -24,6 +25,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import cybercatLogo from '@/assets/cybercat-logo.jpg';
+import { SettingsOverlay } from './SettingsOverlay';
 
 const mainTools = [
   { 
@@ -75,12 +77,6 @@ const comingSoonTools = [
 
 const bottomItems = [
   { 
-    title: 'Settings', 
-    url: '/settings', 
-    icon: Settings,
-    description: 'Configure preferences'
-  },
-  { 
     title: 'Help & Support', 
     url: '/help', 
     icon: HelpCircle,
@@ -93,6 +89,7 @@ export function DashboardSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const isActive = (path: string) => currentPath === path;
   
@@ -100,6 +97,10 @@ export function DashboardSidebar() {
     if (url !== '#') {
       navigate(url);
     }
+  };
+
+  const handleSettingsClick = () => {
+    setIsSettingsOpen(true);
   };
 
   return (
@@ -187,6 +188,22 @@ export function DashboardSidebar() {
         <SidebarGroup className="mt-auto">
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={handleSettingsClick}
+                  className="cursor-pointer hover:bg-muted/50 hover:text-foreground text-muted-foreground rounded-lg mx-2 transition-all duration-200"
+                >
+                  <Settings className="w-5 h-5 flex-shrink-0" />
+                  {open && (
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">Settings</div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        Configure preferences
+                      </div>
+                    </div>
+                  )}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               {bottomItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
@@ -209,6 +226,11 @@ export function DashboardSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      
+      <SettingsOverlay 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
     </Sidebar>
   );
 }
