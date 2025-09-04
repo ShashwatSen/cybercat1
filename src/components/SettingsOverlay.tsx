@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface SettingsOverlayProps {
   isOpen: boolean;
@@ -109,13 +110,13 @@ export function SettingsOverlay({ isOpen, onClose }: SettingsOverlayProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl max-h-[85vh] overflow-hidden p-0 bg-background/98 backdrop-blur-md border border-border/50 shadow-2xl">
-        <div className="overflow-y-auto">
-          <DialogHeader className="px-6 py-4 border-b border-border/30 bg-gradient-to-r from-primary/5 to-primary/10">
-            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              Settings & Preferences
-            </DialogTitle>
-          </DialogHeader>
+        <DialogHeader className="px-6 py-4 border-b border-border/30 bg-gradient-to-r from-primary/5 to-primary/10">
+          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            Settings & Preferences
+          </DialogTitle>
+        </DialogHeader>
 
+        <ScrollArea className="flex-1 max-h-[calc(85vh-80px)]">
           <div className="p-6 space-y-8">
             {settingItems.map((category, categoryIndex) => {
               const CategoryIcon = category.icon;
@@ -183,7 +184,7 @@ export function SettingsOverlay({ isOpen, onClose }: SettingsOverlayProps) {
               </Button>
             </div>
           </div>
-        </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
