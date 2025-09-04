@@ -17,6 +17,7 @@ import {
   Target,
   Menu
 } from 'lucide-react';
+import HistorySection from '@/components/HistorySection';
 import cybercatLogo from '@/assets/cybercat-logo.jpg';
 
 const Dashboard = () => {
@@ -204,6 +205,9 @@ const Dashboard = () => {
             })}
           </div>
         </div>
+
+        {/* History Section */}
+        <HistorySection />
 
         {/* Stats Section */}
         <div className="bg-background/50 backdrop-blur-sm border border-primary/20 rounded-lg p-6 cyber-border animate-slide-up" style={{ animationDelay: '0.8s' }}>
